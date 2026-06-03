@@ -26,20 +26,20 @@ export async function GET(req: NextRequest) {
       orderBy: { period: "desc" },
     });
 
-    const royaltiesWithCalc = royalties.map((r) => ({
+    const royaltiesWithCalc = royalties.map((r: any) => ({
       ...r,
       calculatedAmount: calculateRoyalty(r.streams),
     }));
 
     const summary = {
-      totalStreams: royalties.reduce((sum, r) => sum + r.streams, 0),
-      totalEarned: royalties.reduce((sum, r) => sum + calculateRoyalty(r.streams), 0),
+      totalStreams: royalties.reduce((sum: any, r: any) => sum + r.streams, 0),
+      totalEarned: royalties.reduce((sum: any, r: any) => sum + calculateRoyalty(r.streams), 0),
       totalPaid: royalties
-        .filter((r) => r.paid)
-        .reduce((sum, r) => sum + calculateRoyalty(r.streams), 0),
+        .filter((r: any) => r.paid)
+        .reduce((sum: any, r: any) => sum + calculateRoyalty(r.streams), 0),
       totalPending: royalties
-        .filter((r) => !r.paid)
-        .reduce((sum, r) => sum + calculateRoyalty(r.streams), 0),
+        .filter((r: any) => !r.paid)
+        .reduce((sum: any, r: any) => sum + calculateRoyalty(r.streams), 0),
     };
 
     return NextResponse.json({

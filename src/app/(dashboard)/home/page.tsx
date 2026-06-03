@@ -56,7 +56,7 @@ export default async function HomePage() {
         </div>
         {trending.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {trending.map((track) => (
+            {trending.map((track: any) => (
               <MusicCard key={track.id} track={track} />
             ))}
           </div>
@@ -73,7 +73,7 @@ export default async function HomePage() {
         </div>
         {recent.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {recent.map((track) => (
+            {recent.map((track: any) => (
               <MusicCard key={track.id} track={track} />
             ))}
           </div>

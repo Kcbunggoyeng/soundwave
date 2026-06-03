@@ -26,7 +26,7 @@ async function getCreatorStats(userId: string) {
   ]);
 
   const totalStreams = royalties.reduce((s, r) => s + r.streams, 0);
-  const totalEarned = royalties.reduce((s, r) => s + r.amountUsd, 0);
+  const totalEarned = royalties.reduce((s: any, r: any) => s + r.amountUsd, 0);
 
   return { mediaCount, totalStreams, totalEarned, myMedia };
 }
@@ -114,7 +114,7 @@ export default async function CreatorPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {myMedia.map((m) => (
+              {myMedia.map((m: any) => (
                 <div
                   key={m.id}
                   className="bg-surface rounded-xl p-4 flex items-center gap-4 border border-surface-hi/40 hover:border-surface-hi transition-all"

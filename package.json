@@ -25,6 +25,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "stripe": "^16.2.0",
+    "ws": "^8.21.0",
     "zod": "^3.25.76",
     "zustand": "^4.5.4"
   },
@@ -33,6 +34,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/ws": "^8.18.1",
     "autoprefixer": "^10.5.0",
     "postcss": "^8.5.15",
     "prisma": "^7.8.0",

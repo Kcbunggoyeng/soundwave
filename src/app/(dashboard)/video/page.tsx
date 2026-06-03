@@ -57,7 +57,7 @@ export default async function VideoPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {videos.map((video) => (
+          {videos.map((video: any) => (
             <div
               key={video.id}
               className="group bg-zinc-900 rounded-xl overflow-hidden hover:bg-zinc-800 transition-all border border-zinc-800 hover:border-zinc-700 cursor-pointer"

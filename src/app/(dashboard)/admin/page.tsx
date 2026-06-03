@@ -108,7 +108,7 @@ export default async function AdminPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {pendingMedia.map((media) => (
+          {pendingMedia.map((media: any) => (
               <AdminReviewCard key={media.id} media={media as any} />
             ))}
           </div>
@@ -139,7 +139,7 @@ export default async function AdminPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {pendingApplications.map((app) => (
+            {pendingApplications.map((app: any) => (
               <CreatorApplicationCard key={app.id} app={app as any} />
             ))}
           </div>
