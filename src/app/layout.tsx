@@ -7,8 +7,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SoundWave — Musik Tanpa Batas",
-  description: "Platform streaming musik dengan sistem royalti hak cipta yang transparan",
+  title: "SoundWave — Royalti Jujur untuk Artist Independen",
+  description: "Platform streaming musik bukan buat korporasi. Upload, dengar, dan bayaran transparan langsung ke artist.",
   icons: { icon: "/favicon.ico" },
 };
 
@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className="dark">
-      <body className={`${inter.className} bg-black text-white antialiased`}>
+      <body className={`${inter.className} bg-ink text-chalk antialiased`}>
         {children}
       </body>
     </html>

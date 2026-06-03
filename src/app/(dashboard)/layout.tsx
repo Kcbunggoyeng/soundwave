@@ -17,9 +17,9 @@ export default async function DashboardLayout({
 
   return (
     <SessionProvider session={session}>
-      <div className="flex bg-black min-h-screen">
+      <div className="flex bg-ink min-h-screen">
         <Sidebar />
-        <main className="ml-64 flex-1 pb-24 min-h-screen overflow-y-auto">
+        <main className="ml-60 flex-1 pb-24 min-h-screen overflow-y-auto">
           {children}
         </main>
         <AudioPlayer />

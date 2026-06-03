@@ -8,16 +8,17 @@ import { db } from "@/lib/db";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Login diperlukan" }, { status: 401 });
     }
 
     const media = await db.media.findUnique({
-      where: { id: params.id, status: "APPROVED" },
+      where: { id, status: "APPROVED" },
       select: {
         id: true,
         title: true,
@@ -30,15 +31,12 @@ export async function GET(
       return NextResponse.json({ error: "Musik tidak ditemukan" }, { status: 404 });
     }
 
-    // Catat stream count (untuk royalti)
-    // Menggunakan increment agar tidak race condition
     await db.media.update({
       where: { id: media.id },
       data: { playCount: { increment: 1 } },
     });
 
-    // Update atau buat royalty record bulan ini
-    const period = new Date().toISOString().slice(0, 7); // "2026-06"
+    const period = new Date().toISOString().slice(0, 7);
     await db.royalty.upsert({
       where: {
         artistId_mediaId_period: {
@@ -53,12 +51,10 @@ export async function GET(
         mediaId: media.id,
         period,
         streams: 1,
-        amountUsd: 0.004, // $0.004 per stream awal
+        amountUsd: 0.004,
       },
     });
 
-    // Kembalikan URL untuk streaming
-    // (Jika pakai S3 private, harusnya generate signed URL di sini)
     return NextResponse.json({
       streamUrl: media.mediaUrl,
       trackId: media.id,

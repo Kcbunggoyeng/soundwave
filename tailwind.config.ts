@@ -10,11 +10,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          green: "#1DB954",
-          "green-light": "#1ed760",
-          black: "#191414",
+        ink: "#0a0a0f",
+        surface: {
+          DEFAULT: "#13131f",
+          hi: "#1a1a2e",
         },
+        coral: {
+          DEFAULT: "#ff4d6d",
+          hover: "#ff3357",
+          muted: "rgba(255,77,109,0.12)",
+        },
+        mist: "#8b8b9e",
+        chalk: "#f0f0f5",
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
       },
     },
   },

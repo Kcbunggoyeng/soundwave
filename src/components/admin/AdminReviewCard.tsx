@@ -24,7 +24,7 @@ interface MediaItem {
 
 export function AdminReviewCard({ media }: { media: MediaItem }) {
   const router = useRouter();
-  const [loading, setLoading] = useState<"approve" | "reject" | null>(null);
+const [loading, setLoading] = useState(null as "approve" | "reject" | null);
   const [rejectReason, setRejectReason] = useState("");
   const [showRejectForm, setShowRejectForm] = useState(false);
 
@@ -64,83 +64,85 @@ export function AdminReviewCard({ media }: { media: MediaItem }) {
   };
 
   return (
-    <div className="bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden">
-      <div className="p-6">
+    <div className="bg-surface border border-surface-hi/50 rounded-xl overflow-hidden">
+      <div className="p-5 md:p-6">
         <div className="flex gap-5">
-          <div className="w-24 h-24 rounded-xl bg-zinc-800 flex-shrink-0 overflow-hidden flex items-center justify-center">
+          <div className="w-24 h-24 rounded-lg bg-surface-hi flex-shrink-0 overflow-hidden flex items-center justify-center">
             {media.thumbnailUrl ? (
               <img src={media.thumbnailUrl} alt={media.title} className="w-full h-full object-cover"/>
             ) : (
-              <span className="text-4xl">{media.type === "MUSIC" ? "🎵" : "🎬"}</span>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="#8b8b9e">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+              </svg>
             )}
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-4 mb-3">
+            <div className="flex items-start justify-between gap-4 mb-2">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-white text-lg font-bold">{media.title}</h3>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  <h3 className="text-chalk text-lg font-bold">{media.title}</h3>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold uppercase tracking-wide ${
                     media.type === "MUSIC"
-                      ? "bg-green-900/50 text-green-400"
-                      : "bg-purple-900/50 text-purple-400"
+                      ? "bg-coral/10 text-coral"
+                      : "bg-purple-500/10 text-purple-400"
                   }`}>
-                    {media.type === "MUSIC" ? "🎵 Musik" : "🎬 Video"}
+                    {media.type === "MUSIC" ? "Musik" : "Video"}
                   </span>
                 </div>
                 {media.description && (
-                  <p className="text-zinc-400 text-sm">{media.description}</p>
+                  <p className="text-mist text-sm">{media.description}</p>
                 )}
               </div>
-              <span className="bg-yellow-500/20 text-yellow-400 text-xs font-bold px-3 py-1 rounded-full flex-shrink-0">
-                PENDING
+              <span className="bg-amber-500/10 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wide flex-shrink-0">
+                Pending
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-4 text-xs text-zinc-500 mb-4">
-              {media.genre && <span>🎼 {media.genre}</span>}
-              <span>⏱️ {formatDuration(media.duration)}</span>
+            <div className="flex flex-wrap gap-4 text-xs text-mist/60 mb-3">
+              {media.genre && <span className="bg-surface-hi px-2 py-0.5 rounded">{media.genre}</span>}
+              <span>{formatDuration(media.duration)}</span>
             </div>
 
-            <div className="flex items-center gap-2 p-3 bg-zinc-800 rounded-lg">
+            <div className="flex items-center gap-2 p-2.5 bg-surface-hi/50 rounded-lg">
               {media.uploadedBy.image ? (
-                <img src={media.uploadedBy.image} alt="" className="w-8 h-8 rounded-full"/>
+                <img src={media.uploadedBy.image} alt="" className="w-7 h-7 rounded-md"/>
               ) : (
-                <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-black font-bold text-sm">
+                <div className="w-7 h-7 rounded-md bg-coral/20 flex items-center justify-center text-coral font-bold text-xs">
                   {media.uploadedBy.name?.[0]?.toUpperCase() ?? "?"}
                 </div>
               )}
               <div>
-                <p className="text-white text-sm font-medium">{media.uploadedBy.name ?? "Unknown"}</p>
-                <p className="text-zinc-500 text-xs">{media.uploadedBy.email}</p>
+                <p className="text-chalk text-sm font-medium">{media.uploadedBy.name ?? "Unknown"}</p>
+                <p className="text-mist/50 text-xs">{media.uploadedBy.email}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-4 p-3 bg-zinc-800/50 rounded-lg">
-          <p className="text-zinc-500 text-xs mb-1">URL File:</p>
+        <div className="mt-4 p-3 bg-surface-hi/30 rounded-lg">
+          <p className="text-mist/40 text-[10px] uppercase tracking-wider mb-1">File URL</p>
           <a
             href={media.mediaUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-green-400 text-xs hover:underline break-all"
+            className="text-coral/80 text-xs hover:text-coral hover:underline break-all"
           >
             {media.mediaUrl}
           </a>
         </div>
 
         {showRejectForm && (
-          <div className="mt-4 p-4 bg-red-950/30 border border-red-800/50 rounded-xl">
+          <div className="mt-4 p-4 bg-red-950/20 border border-red-900/30 rounded-xl">
             <label className="block text-red-300 text-sm font-medium mb-2">
-              Alasan Penolakan (wajib diisi)
+              Alasan Penolakan (wajib)
             </label>
             <textarea
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="Jelaskan mengapa konten ini ditolak..."
               rows={3}
-              className="w-full bg-zinc-800 border border-red-800/50 text-white placeholder-zinc-500 rounded-lg px-4 py-3 focus:outline-none focus:border-red-500 transition-colors text-sm resize-none"
+              className="w-full bg-surface border border-red-900/30 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-red-500/50 transition-colors text-sm resize-none"
             />
           </div>
         )}
@@ -149,31 +151,31 @@ export function AdminReviewCard({ media }: { media: MediaItem }) {
           <button
             onClick={() => handleAction("approve")}
             disabled={loading !== null}
-            className="flex-1 bg-green-500 hover:bg-green-400 disabled:opacity-50 text-black font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2"
+            className="flex-1 bg-coral hover:bg-coral-hover disabled:opacity-50 text-ink font-bold py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
           >
-            {loading === "approve" ? "Memproses..." : "✓ Setujui & Tayangkan"}
+            {loading === "approve" ? "Memproses..." : "Setujui & Tayangkan"}
           </button>
 
           {!showRejectForm ? (
             <button
               onClick={() => setShowRejectForm(true)}
               disabled={loading !== null}
-              className="flex-1 bg-red-900/50 hover:bg-red-900 disabled:opacity-50 text-red-300 font-bold py-3 rounded-xl transition-all border border-red-800/50"
+              className="flex-1 bg-surface-hi hover:bg-red-900/20 disabled:opacity-50 text-red-300 font-bold py-2.5 rounded-lg transition-all border border-red-900/20 text-sm"
             >
-              ✕ Tolak
+              Tolak
             </button>
           ) : (
             <div className="flex gap-2 flex-1">
               <button
                 onClick={() => { setShowRejectForm(false); setRejectReason(""); }}
-                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-3 rounded-xl transition-all text-sm"
+                className="flex-1 bg-surface-hi hover:bg-surface-hi/80 text-mist font-bold py-2.5 rounded-lg transition-all text-sm"
               >
                 Batal
               </button>
               <button
                 onClick={() => handleAction("reject")}
                 disabled={loading !== null || !rejectReason.trim()}
-                className="flex-1 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition-all text-sm"
+                className="flex-1 bg-red-700 hover:bg-red-600 disabled:opacity-50 text-white font-bold py-2.5 rounded-lg transition-all text-sm"
               >
                 {loading === "reject" ? "Memproses..." : "Konfirmasi Tolak"}
               </button>

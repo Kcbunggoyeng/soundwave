@@ -18,7 +18,7 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
-  password      String?   // null jika login via Google
+  password      String?
   role          Role      @default(USER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -83,13 +83,14 @@ model Media {
   id             String      @id @default(cuid())
   title          String
   description    String?
-  type           MediaType   // MUSIC | VIDEO
-  mediaUrl       String      // URL S3
+  type           MediaType
+  mediaUrl       String
   thumbnailUrl   String?
-  duration       Int?        // detik
+  duration       Int?
   category       String?
   genre          String?
   status         MediaStatus @default(PENDING)
+  rejectionReason String?
   playCount      Int         @default(0)
   uploadedById   String
   createdAt      DateTime    @default(now())
@@ -142,7 +143,7 @@ model PlaylistItem {
 }
 
 // ─────────────────────────────────────────
-// SUBSCRIPTION (untuk akses premium)
+// SUBSCRIPTION
 // ─────────────────────────────────────────
 model Subscription {
   id               String             @id @default(cuid())
@@ -171,13 +172,41 @@ enum SubscriptionStatus {
 }
 
 // ─────────────────────────────────────────
+// CREATOR APPLICATION
+// ─────────────────────────────────────────
+model CreatorApplication {
+  id          String   @id @default(cuid())
+  userId      String?
+  artistName  String
+  realName    String
+  email       String
+  phone       String
+  genre       String
+  bio         String
+  instagram   String?
+  youtube     String?
+  sampleWork  String
+  reason      String
+  rejectionReason String?
+  status      CreatorApplicationStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum CreatorApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ─────────────────────────────────────────
 // PAYMENT & HAK CIPTA (ROYALTY)
 // ─────────────────────────────────────────
 model Payment {
   id              String        @id @default(cuid())
   userId          String
   stripePaymentId String?       @unique
-  amount          Int           // dalam cent (IDR atau USD)
+  amount          Int
   currency        String        @default("usd")
   status          PaymentStatus @default(PENDING)
   description     String?
@@ -193,12 +222,11 @@ enum PaymentStatus {
   REFUNDED
 }
 
-// Royalty transparan: siapa artist, berapa stream, berapa bayaran
 model Royalty {
   id         String   @id @default(cuid())
   artistId   String
   mediaId    String
-  period     String   // e.g. "2026-06"
+  period     String
   streams    Int      @default(0)
   amountUsd  Float    @default(0)
   paid       Boolean  @default(false)

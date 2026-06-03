@@ -35,14 +35,41 @@ export default function CreatorRegisterPage() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const allAgreed = agreed.every(Boolean);
 
   const handleSubmit = async () => {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 2000));
-    setSubmitted(true);
-    setLoading(false);
+    setError("");
+    try {
+      const res = await fetch("/api/creator/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          artistName: form.artistName,
+          realName: form.realName,
+          email: form.email,
+          phone: form.phone,
+          genre: form.genre,
+          bio: form.bio,
+          instagram: form.instagram || null,
+          youtube: form.youtube || null,
+          sampleWork: form.sampleWork,
+          reason: form.reason,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "Gagal mengirim pendaftaran.");
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError("Terjadi kesalahan jaringan. Coba lagi nanti.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleAgreed = (i: number) => {
@@ -53,26 +80,23 @@ export default function CreatorRegisterPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+      <div className="min-h-screen bg-ink flex items-center justify-center p-6">
         <div className="max-w-lg w-full text-center">
-          <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-            <svg width="40" height="40" fill="#1DB954" viewBox="0 0 24 24">
+          <div className="w-16 h-16 rounded-xl bg-coral/15 flex items-center justify-center mx-auto mb-6">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="#ff4d6d">
               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
             </svg>
           </div>
-          <h1 className="text-white text-3xl font-black mb-3">Pendaftaran Dikirim!</h1>
-          <p className="text-zinc-400 mb-6 leading-relaxed">
-            Terima kasih,{" "}
-            <span className="text-white font-semibold">{form.artistName}</span>!
-            Tim SoundWave akan mereview dalam{" "}
-            <span className="text-green-400 font-semibold">3-5 hari kerja</span>.
-            Notifikasi dikirim ke{" "}
-            <span className="text-white">{form.email}</span>.
+          <h1 className="text-chalk text-2xl font-black mb-3">Pendaftaran Dikirim!</h1>
+          <p className="text-mist mb-6 leading-relaxed">
+            Terima kasih, <span className="text-chalk font-semibold">{form.artistName}</span>!
+            Tim SoundWave akan mereview dalam <span className="text-coral font-semibold">3-5 hari kerja</span>.
+            Notifikasi dikirim ke <span className="text-chalk">{form.email}</span>.
           </p>
 
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8 text-left">
-            <p className="text-zinc-400 text-xs uppercase tracking-wider font-semibold mb-4">
-              Proses Selanjutnya:
+          <div className="bg-surface border border-surface-hi/50 rounded-xl p-6 mb-8 text-left">
+            <p className="text-mist/60 text-xs uppercase tracking-wider font-semibold mb-4">
+              Proses Selanjutnya
             </p>
             <div className="space-y-3">
               {[
@@ -82,10 +106,10 @@ export default function CreatorRegisterPage() {
                 { n: "4", label: "Mulai upload dan dapatkan royalti", done: false },
               ].map((s) => (
                 <div key={s.n} className="flex items-center gap-3">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${s.done ? "bg-green-500 text-black" : "bg-zinc-800 text-zinc-400"}`}>
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${s.done ? "bg-coral text-ink" : "bg-surface-hi text-mist"}`}>
                     {s.done ? "✓" : s.n}
                   </div>
-                  <span className={`text-sm ${s.done ? "text-white" : "text-zinc-500"}`}>
+                  <span className={`text-sm ${s.done ? "text-chalk" : "text-mist/60"}`}>
                     {s.label}
                   </span>
                 </div>
@@ -95,7 +119,7 @@ export default function CreatorRegisterPage() {
 
           <Link
             href="/login"
-            className="block bg-green-500 hover:bg-green-400 text-black font-bold px-8 py-3 rounded-full transition-all"
+            className="inline-block bg-coral hover:bg-coral-hover text-ink font-bold px-8 py-3 rounded-lg transition-all text-sm"
           >
             Kembali ke Login
           </Link>
@@ -105,25 +129,44 @@ export default function CreatorRegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-ink">
       {/* Header */}
-      <div className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
+      <div className="border-b border-surface-hi/40 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="20" fill="#1DB954" />
+            <rect width="40" height="40" rx="10" fill="#ff4d6d" opacity="0.12" />
             <path
-              d="M12 22c4-3 10-3 16 0M10 17c6-4 14-4 20 0M14 27c3-2 9-2 12 0"
-              stroke="white" strokeWidth="2.5" strokeLinecap="round"
+              d="M8 26c5-10 8-2 12-10s5 2 9-6"
+              stroke="#ff4d6d"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
             />
+            <path
+              d="M8 32c4-4 7-2 10-8s4 4 8-2"
+              stroke="#ff4d6d"
+              strokeWidth="2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.55"
+            />
+            <circle cx="30" cy="10" r="2.5" fill="#ff4d6d" opacity="0.9" />
           </svg>
-          <span className="text-white font-bold text-lg">SoundWave</span>
+          <span className="text-chalk font-bold text-lg tracking-tight">SoundWave</span>
         </Link>
-        <Link href="/login" className="text-zinc-400 hover:text-white text-sm transition-colors">
+        <Link href="/login" className="text-mist hover:text-chalk text-sm transition-colors">
           Sudah punya akun? Masuk
         </Link>
       </div>
 
       <div className="max-w-2xl mx-auto px-6 py-10">
+        {/* Error global */}
+        {error && (
+          <div className="bg-red-950/50 border border-red-900/50 text-red-300 text-sm p-4 rounded-xl mb-6 text-center">
+            {error}
+          </div>
+        )}
+
         {/* Progress */}
         <div className="flex items-center mb-10">
           {[
@@ -132,14 +175,14 @@ export default function CreatorRegisterPage() {
             { n: 3, label: "Detail Karya" },
           ].map((s, i) => (
             <div key={s.n} className="flex items-center flex-1">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-all ${step >= s.n ? "bg-green-500 text-black" : "bg-zinc-800 text-zinc-500"}`}>
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 transition-all ${step >= s.n ? "bg-coral text-ink" : "bg-surface-hi text-mist"}`}>
                 {step > s.n ? "✓" : s.n}
               </div>
-              <span className={`text-xs font-medium mx-2 hidden sm:block ${step >= s.n ? "text-white" : "text-zinc-600"}`}>
+              <span className={`text-xs font-medium mx-2 hidden sm:block ${step >= s.n ? "text-chalk" : "text-mist/40"}`}>
                 {s.label}
               </span>
               {i < 2 && (
-                <div className={`flex-1 h-0.5 mr-2 ${step > s.n ? "bg-green-500" : "bg-zinc-800"}`} />
+                <div className={`flex-1 h-0.5 mr-2 ${step > s.n ? "bg-coral" : "bg-surface-hi"}`} />
               )}
             </div>
           ))}
@@ -149,16 +192,15 @@ export default function CreatorRegisterPage() {
         {step === 1 && (
           <div>
             <div className="mb-8">
-              <h1 className="text-white text-3xl font-black mb-2">Daftar sebagai Creator</h1>
-              <p className="text-zinc-400">
-                Bergabunglah dengan ribuan artist di SoundWave dan mulai monetisasi karyamu.
-                Baca dan setujui persyaratan berikut.
+              <h1 className="text-chalk text-3xl font-black mb-2">Daftar sebagai Creator</h1>
+              <p className="text-mist">
+                Bergabung dengan ribuan artist di SoundWave dan mulai monetisasi karyamu.
               </p>
             </div>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-6">
-              <h2 className="text-white font-bold mb-5 flex items-center gap-2">
-                <span className="text-xl">📋</span>
+            <div className="bg-surface border border-surface-hi/50 rounded-xl p-6 mb-6">
+              <h2 className="text-chalk font-bold mb-5 flex items-center gap-2">
+                <span className="text-coral text-lg">|</span>
                 Persyaratan Pendaftaran Creator
               </h2>
               <div className="space-y-4">
@@ -168,14 +210,14 @@ export default function CreatorRegisterPage() {
                     className="flex items-start gap-3 cursor-pointer group"
                     onClick={() => toggleAgreed(i)}
                   >
-                    <div className={`w-5 h-5 rounded flex-shrink-0 mt-0.5 border-2 flex items-center justify-center transition-all ${agreed[i] ? "bg-green-500 border-green-500" : "border-zinc-600 hover:border-zinc-400"}`}>
+                    <div className={`w-5 h-5 rounded flex-shrink-0 mt-0.5 border-2 flex items-center justify-center transition-all ${agreed[i] ? "bg-coral border-coral" : "border-mist/30 hover:border-mist"}`}>
                       {agreed[i] && (
-                        <svg width="10" height="10" fill="black" viewBox="0 0 24 24">
+                        <svg width="10" height="10" fill="#0a0a0f" viewBox="0 0 24 24">
                           <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                         </svg>
                       )}
                     </div>
-                    <span className={`text-sm leading-relaxed transition-colors ${agreed[i] ? "text-white" : "text-zinc-400 group-hover:text-zinc-300"}`}>
+                    <span className={`text-sm leading-relaxed transition-colors ${agreed[i] ? "text-chalk" : "text-mist group-hover:text-chalk"}`}>
                       {req}
                     </span>
                   </div>
@@ -183,8 +225,8 @@ export default function CreatorRegisterPage() {
               </div>
             </div>
 
-            <div className="bg-green-500/5 border border-green-500/20 rounded-xl p-4 mb-6">
-              <p className="text-green-400 text-sm leading-relaxed">
+            <div className="bg-coral/5 border border-coral/15 rounded-xl p-4 mb-6">
+              <p className="text-coral/90 text-sm leading-relaxed">
                 <span className="font-bold">Info:</span> Pendaftaran Creator memerlukan
                 review admin 3-5 hari kerja. Setelah disetujui, kamu bisa upload musik
                 dan video serta mulai mendapat royalti.
@@ -194,16 +236,16 @@ export default function CreatorRegisterPage() {
             <button
               onClick={() => setStep(2)}
               disabled={!allAgreed}
-              className="w-full bg-green-500 hover:bg-green-400 disabled:opacity-40 disabled:cursor-not-allowed text-black font-bold py-4 rounded-full transition-all"
+              className="w-full bg-coral hover:bg-coral-hover disabled:opacity-40 disabled:cursor-not-allowed text-ink font-bold py-4 rounded-lg transition-all text-sm"
             >
               {allAgreed
                 ? "Lanjutkan"
                 : `Centang semua persyaratan (${agreed.filter(Boolean).length}/${REQUIREMENTS.length})`}
             </button>
 
-            <p className="text-center text-zinc-500 text-sm mt-4">
+            <p className="text-center text-mist text-sm mt-4">
               Bukan artist?{" "}
-              <Link href="/register" className="text-zinc-300 hover:text-green-400 transition-colors">
+              <Link href="/register" className="text-chalk hover:text-coral transition-colors">
                 Daftar sebagai pendengar
               </Link>
             </p>
@@ -214,8 +256,8 @@ export default function CreatorRegisterPage() {
         {step === 2 && (
           <div>
             <div className="mb-8">
-              <h1 className="text-white text-3xl font-black mb-2">Data Diri</h1>
-              <p className="text-zinc-400">Isi informasi dirimu sebagai artist.</p>
+              <h1 className="text-chalk text-3xl font-black mb-2">Data Diri</h1>
+              <p className="text-mist">Isi informasi dirimu sebagai artist.</p>
             </div>
 
             <div className="space-y-4">
@@ -226,7 +268,7 @@ export default function CreatorRegisterPage() {
                 { label: "Nomor WhatsApp *", key: "phone", placeholder: "08xxxxxxxxxx", type: "tel" },
               ].map((field) => (
                 <div key={field.key}>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">
+                  <label className="block text-mist text-sm font-medium mb-2">
                     {field.label}
                   </label>
                   <input
@@ -234,17 +276,17 @@ export default function CreatorRegisterPage() {
                     value={(form as any)[field.key]}
                     onChange={(e) => setForm({ ...form, [field.key]: e.target.value })}
                     placeholder={field.placeholder}
-                    className="w-full bg-zinc-900 border border-zinc-700 text-white placeholder-zinc-500 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm"
+                    className="w-full bg-surface border border-surface-hi/60 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-coral/60 transition-colors text-sm"
                   />
                 </div>
               ))}
 
               <div>
-                <label className="block text-zinc-300 text-sm font-medium mb-2">Genre Utama *</label>
+                <label className="block text-mist text-sm font-medium mb-2">Genre Utama *</label>
                 <select
                   value={form.genre}
                   onChange={(e) => setForm({ ...form, genre: e.target.value })}
-                  className="w-full bg-zinc-900 border border-zinc-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm"
+                  className="w-full bg-surface border border-surface-hi/60 text-chalk rounded-lg px-4 py-3 focus:outline-none focus:border-coral/60 transition-colors text-sm"
                 >
                   <option value="">Pilih genre...</option>
                   {GENRES.map((g) => <option key={g} value={g}>{g}</option>)}
@@ -252,13 +294,13 @@ export default function CreatorRegisterPage() {
               </div>
 
               <div>
-                <label className="block text-zinc-300 text-sm font-medium mb-2">Bio Singkat *</label>
+                <label className="block text-mist text-sm font-medium mb-2">Bio Singkat *</label>
                 <textarea
                   value={form.bio}
                   onChange={(e) => setForm({ ...form, bio: e.target.value })}
                   placeholder="Ceritakan tentang dirimu sebagai artist..."
                   rows={4}
-                  className="w-full bg-zinc-900 border border-zinc-700 text-white placeholder-zinc-500 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm resize-none"
+                  className="w-full bg-surface border border-surface-hi/60 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-coral/60 transition-colors text-sm resize-none"
                 />
               </div>
             </div>
@@ -266,14 +308,14 @@ export default function CreatorRegisterPage() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setStep(1)}
-                className="flex-1 border border-zinc-700 text-zinc-300 font-bold py-3 rounded-full hover:border-zinc-500 transition-all"
+                className="flex-1 border border-surface-hi/60 text-mist font-bold py-3 rounded-lg hover:border-mist/40 transition-all text-sm"
               >
                 Kembali
               </button>
               <button
                 onClick={() => setStep(3)}
                 disabled={!form.artistName || !form.realName || !form.email || !form.phone || !form.genre || !form.bio}
-                className="flex-1 bg-green-500 hover:bg-green-400 disabled:opacity-40 disabled:cursor-not-allowed text-black font-bold py-3 rounded-full transition-all"
+                className="flex-1 bg-coral hover:bg-coral-hover disabled:opacity-40 disabled:cursor-not-allowed text-ink font-bold py-3 rounded-lg transition-all text-sm"
               >
                 Lanjutkan
               </button>
@@ -285,8 +327,8 @@ export default function CreatorRegisterPage() {
         {step === 3 && (
           <div>
             <div className="mb-8">
-              <h1 className="text-white text-3xl font-black mb-2">Detail Karya</h1>
-              <p className="text-zinc-400">Tunjukkan karyamu kepada tim SoundWave.</p>
+              <h1 className="text-chalk text-3xl font-black mb-2">Detail Karya</h1>
+              <p className="text-mist">Tunjukkan karyamu kepada tim SoundWave.</p>
             </div>
 
             <div className="space-y-4">
@@ -296,7 +338,7 @@ export default function CreatorRegisterPage() {
                 { label: "Link Karya Sample *", key: "sampleWork", placeholder: "YouTube, SoundCloud, Google Drive, dll", type: "url" },
               ].map((field) => (
                 <div key={field.key}>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">
+                  <label className="block text-mist text-sm font-medium mb-2">
                     {field.label}
                   </label>
                   <input
@@ -304,13 +346,13 @@ export default function CreatorRegisterPage() {
                     value={(form as any)[field.key]}
                     onChange={(e) => setForm({ ...form, [field.key]: e.target.value })}
                     placeholder={field.placeholder}
-                    className="w-full bg-zinc-900 border border-zinc-700 text-white placeholder-zinc-500 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm"
+                    className="w-full bg-surface border border-surface-hi/60 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-coral/60 transition-colors text-sm"
                   />
                 </div>
               ))}
 
               <div>
-                <label className="block text-zinc-300 text-sm font-medium mb-2">
+                <label className="block text-mist text-sm font-medium mb-2">
                   Mengapa ingin bergabung SoundWave? *
                 </label>
                 <textarea
@@ -318,13 +360,13 @@ export default function CreatorRegisterPage() {
                   onChange={(e) => setForm({ ...form, reason: e.target.value })}
                   placeholder="Ceritakan motivasimu dan rencana konten yang akan kamu upload..."
                   rows={4}
-                  className="w-full bg-zinc-900 border border-zinc-700 text-white placeholder-zinc-500 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm resize-none"
+                  className="w-full bg-surface border border-surface-hi/60 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-coral/60 transition-colors text-sm resize-none"
                 />
               </div>
             </div>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 mt-6">
-              <p className="text-zinc-400 text-xs uppercase tracking-wider mb-3 font-semibold">
+            <div className="bg-surface border border-surface-hi/50 rounded-lg p-5 mt-6">
+              <p className="text-mist/60 text-xs uppercase tracking-wider mb-3 font-semibold">
                 Ringkasan Pendaftaran
               </p>
               <div className="space-y-2 text-sm">
@@ -334,8 +376,8 @@ export default function CreatorRegisterPage() {
                   { label: "Genre", value: form.genre },
                 ].map((item) => (
                   <div key={item.label} className="flex justify-between">
-                    <span className="text-zinc-500">{item.label}</span>
-                    <span className="text-white font-medium">{item.value}</span>
+                    <span className="text-mist/50">{item.label}</span>
+                    <span className="text-chalk font-medium">{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -344,14 +386,14 @@ export default function CreatorRegisterPage() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setStep(2)}
-                className="flex-1 border border-zinc-700 text-zinc-300 font-bold py-3 rounded-full hover:border-zinc-500 transition-all"
+                className="flex-1 border border-surface-hi/60 text-mist font-bold py-3 rounded-lg hover:border-mist/40 transition-all text-sm"
               >
                 Kembali
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={loading || !form.sampleWork || !form.reason}
-                className="flex-1 bg-green-500 hover:bg-green-400 disabled:opacity-40 disabled:cursor-not-allowed text-black font-bold py-3 rounded-full transition-all"
+                className="flex-1 bg-coral hover:bg-coral-hover disabled:opacity-40 disabled:cursor-not-allowed text-ink font-bold py-3 rounded-lg transition-all text-sm"
               >
                 {loading ? "Mengirim..." : "Kirim Pendaftaran"}
               </button>

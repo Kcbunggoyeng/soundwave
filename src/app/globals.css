@@ -10,13 +10,14 @@
   }
 
   body {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #0a0a0f;
+    color: #f0f0f5;
     font-family: Inter, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom scrollbar */
+  /* Scrollbar coral */
   ::-webkit-scrollbar {
     width: 6px;
   }
@@ -24,38 +25,40 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #3f3f46;
+    background: #2a2a3e;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #52525b;
+    background: #ff4d6d;
   }
 
-  /* Range input styling */
+  /* Range input */
   input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
     background: transparent;
   }
-
   input[type="range"]::-webkit-slider-runnable-track {
-    background: #3f3f46;
+    background: #2a2a3e;
     height: 3px;
     border-radius: 2px;
   }
-
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none;
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: white;
+    background: #ff4d6d;
     margin-top: -4.5px;
     cursor: pointer;
+    box-shadow: 0 0 8px rgba(255,77,109,0.4);
   }
-
   input[type="range"]:focus {
     outline: none;
+  }
+
+  ::selection {
+    background: rgba(255,77,109,0.25);
+    color: #fff;
   }
 }

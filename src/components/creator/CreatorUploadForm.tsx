@@ -51,15 +51,15 @@ export function CreatorUploadForm() {
   };
 
   return (
-    <div className="bg-zinc-900 rounded-xl p-6 border border-zinc-800">
+    <div className="bg-surface rounded-xl p-6 border border-surface-hi/50">
       {success && (
-        <div className="bg-green-950 border border-green-700 text-green-300 text-sm p-3 rounded-lg mb-4">
-          ✅ {success}
+        <div className="bg-coral/5 border border-coral/20 text-coral text-sm p-3 rounded-lg mb-4">
+          {success}
         </div>
       )}
       {error && (
-        <div className="bg-red-950 border border-red-800 text-red-300 text-sm p-3 rounded-lg mb-4">
-          ❌ {error}
+        <div className="bg-red-950/30 border border-red-900/30 text-red-300 text-sm p-3 rounded-lg mb-4">
+          {error}
         </div>
       )}
 
@@ -73,67 +73,59 @@ export function CreatorUploadForm() {
               onClick={() => setForm({ ...form, type: t })}
               className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 form.type === t
-                  ? "bg-green-500 text-black"
-                  : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                  ? "bg-coral text-ink"
+                  : "bg-surface-hi text-mist hover:text-chalk"
               }`}
             >
-              {t === "MUSIC" ? "🎵 Musik" : "🎬 Video"}
+              {t === "MUSIC" ? "Musik" : "Video"}
             </button>
           ))}
         </div>
 
         <div>
-          <label className="block text-zinc-300 text-sm font-medium mb-2">
-            Judul *
-          </label>
+          <label className="block text-mist text-sm font-medium mb-2">Judul *</label>
           <input
             type="text"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             placeholder="Nama lagu atau video..."
             required
-            className="w-full bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-500 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm"
+            className="w-full bg-ink border border-surface-hi/50 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-coral/50 transition-colors text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-zinc-300 text-sm font-medium mb-2">
-            URL File Audio/Video *
-          </label>
+          <label className="block text-mist text-sm font-medium mb-2">URL File Audio/Video *</label>
           <input
             type="url"
             value={form.mediaUrl}
             onChange={(e) => setForm({ ...form, mediaUrl: e.target.value })}
             placeholder="https://storage.example.com/audio.mp3"
             required
-            className="w-full bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-500 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm"
+            className="w-full bg-ink border border-surface-hi/50 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-coral/50 transition-colors text-sm"
           />
-          <p className="text-zinc-600 text-xs mt-1">
+          <p className="text-mist/40 text-xs mt-1.5">
             Upload file ke S3/Cloudflare R2 dulu, lalu paste URL-nya di sini.
           </p>
         </div>
 
         <div>
-          <label className="block text-zinc-300 text-sm font-medium mb-2">
-            URL Thumbnail/Cover
-          </label>
+          <label className="block text-mist text-sm font-medium mb-2">URL Thumbnail/Cover</label>
           <input
             type="url"
             value={form.thumbnailUrl}
             onChange={(e) => setForm({ ...form, thumbnailUrl: e.target.value })}
             placeholder="https://storage.example.com/cover.jpg"
-            className="w-full bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-500 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm"
+            className="w-full bg-ink border border-surface-hi/50 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-coral/50 transition-colors text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-zinc-300 text-sm font-medium mb-2">
-            Genre
-          </label>
+          <label className="block text-mist text-sm font-medium mb-2">Genre</label>
           <select
             value={form.genre}
             onChange={(e) => setForm({ ...form, genre: e.target.value })}
-            className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm"
+            className="w-full bg-ink border border-surface-hi/50 text-chalk rounded-lg px-4 py-3 focus:outline-none focus:border-coral/50 transition-colors text-sm"
           >
             <option value="">Pilih genre...</option>
             {["Pop", "Rock", "Jazz", "Electronic", "Hip-Hop", "R&B",
@@ -144,34 +136,33 @@ export function CreatorUploadForm() {
         </div>
 
         <div>
-          <label className="block text-zinc-300 text-sm font-medium mb-2">
-            Durasi (detik)
-          </label>
+          <label className="block text-mist text-sm font-medium mb-2">Durasi (detik)</label>
           <input
             type="number"
             value={form.duration}
             onChange={(e) => setForm({ ...form, duration: e.target.value })}
             placeholder="240"
-            className="w-full bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-500 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm"
+            className="w-full bg-ink border border-surface-hi/50 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-coral/50 transition-colors text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-zinc-300 text-sm font-medium mb-2">
-            Deskripsi
-          </label>
+          <label className="block text-mist text-sm font-medium mb-2">Deskripsi</label>
           <textarea
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             placeholder="Ceritakan tentang karya ini..."
             rows={3}
-            className="w-full bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-500 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 transition-colors text-sm resize-none"
+            className="w-full bg-ink border border-surface-hi/50 text-chalk placeholder-mist/30 rounded-lg px-4 py-3 focus:outline-none focus:border-coral/50 transition-colors text-sm resize-none"
           />
         </div>
 
-        <div className="bg-zinc-800/50 rounded-lg p-3 flex gap-3">
-          <span className="text-lg flex-shrink-0">ℹ️</span>
-          <p className="text-zinc-400 text-xs leading-relaxed">
+        <div className="bg-surface-hi/40 rounded-lg p-3.5 flex gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b8b9e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          <p className="text-mist/60 text-xs leading-relaxed">
             Konten yang diupload akan melalui review admin sebelum ditayangkan.
             Proses review biasanya 1x24 jam.
           </p>
@@ -180,7 +171,7 @@ export function CreatorUploadForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-green-500 hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold py-3 rounded-full transition-all text-sm"
+          className="w-full bg-coral hover:bg-coral-hover disabled:opacity-50 disabled:cursor-not-allowed text-ink font-bold py-3 rounded-lg transition-all text-sm"
         >
           {loading ? "Mengupload..." : `Upload ${form.type === "MUSIC" ? "Musik" : "Video"}`}
         </button>

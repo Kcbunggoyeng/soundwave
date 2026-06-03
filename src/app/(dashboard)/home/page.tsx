@@ -41,16 +41,16 @@ export default async function HomePage() {
   return (
     <div className="p-6">
       <div className="mb-8">
-        <h1 className="text-white text-3xl font-bold mb-1">
+        <h1 className="text-chalk text-3xl font-bold mb-1">
           {greeting}, {session?.user?.name?.split(" ")[0] ?? "Pendengar"}!
         </h1>
-        <p className="text-zinc-400">Temukan musik favoritmu hari ini</p>
+        <p className="text-mist">Temukan musik favoritmu hari ini</p>
       </div>
 
       <section className="mb-10">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-white text-xl font-bold">🔥 Trending Sekarang</h2>
-          <a href="/music" className="text-zinc-400 text-sm hover:text-white transition-colors">
+          <h2 className="text-chalk text-xl font-bold">Trending Sekarang</h2>
+          <a href="/music" className="text-mist text-sm hover:text-chalk transition-colors">
             Lihat semua
           </a>
         </div>
@@ -61,7 +61,7 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 text-zinc-500">
+          <div className="text-center py-16 text-mist">
             Belum ada musik. Jadilah yang pertama upload!
           </div>
         )}
@@ -69,7 +69,7 @@ export default async function HomePage() {
 
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-white text-xl font-bold">✨ Terbaru Ditambahkan</h2>
+          <h2 className="text-chalk text-xl font-bold">Terbaru Ditambahkan</h2>
         </div>
         {recent.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -78,7 +78,7 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-8 text-zinc-500">
+          <div className="text-center py-8 text-mist">
             Belum ada musik baru.
           </div>
         )}
