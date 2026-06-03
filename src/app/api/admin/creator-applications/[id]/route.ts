@@ -16,52 +16,58 @@ export async function PATCH(
       where: { id: session.user.id },
       select: { role: true },
     });
-
     if (admin?.role !== "ADMIN") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const body = await req.json();
     const { action, reason } = body;
-
     if (!["approve", "reject"].includes(action)) {
       return NextResponse.json({ error: "Action tidak valid" }, { status: 400 });
     }
 
-    const media = await db.media.findUnique({
+    const app = await db.creatorApplication.findUnique({
       where: { id: params.id },
-      include: {
-        uploadedBy: { select: { id: true, email: true, name: true } },
-      },
     });
-
-    if (!media) {
-      return NextResponse.json({ error: "Konten tidak ditemukan" }, { status: 404 });
+    if (!app) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-
-    if (media.status !== "PENDING") {
+    if (app.status !== "PENDING") {
       return NextResponse.json(
-        { error: "Konten ini sudah diproses sebelumnya" },
+        { error: "Application sudah diproses" },
         { status: 400 }
       );
     }
 
     const newStatus = action === "approve" ? "APPROVED" : "REJECTED";
-    const updatedMedia = await db.media.update({
+    const updateData: any = { status: newStatus };
+    if (action === "reject" && reason) {
+      updateData.rejectionReason = reason;
+    }
+
+    const updated = await db.creatorApplication.update({
       where: { id: params.id },
-      data: { status: newStatus },
+      data: updateData,
     });
 
-    console.log(`[ADMIN] ${action.toUpperCase()} - "${media.title}" by ${media.uploadedBy.email}`);
+    if (action === "approve") {
+      const existingUser = await db.user.findUnique({
+        where: { email: app.email },
+      });
+      if (existingUser) {
+        await db.user.update({
+          where: { id: existingUser.id },
+          data: { role: "CREATOR" },
+        });
+      }
+    }
 
     return NextResponse.json({
-      message: action === "approve"
-        ? "Konten berhasil disetujui!"
-        : "Konten berhasil ditolak.",
-      media: updatedMedia,
+      message: action === "approve" ? "Creator disetujui!" : "Creator ditolak.",
+      application: updated,
     });
   } catch (error) {
-    console.error("[ADMIN_REVIEW_ERROR]", error);
-    return NextResponse.json({ error: "Terjadi kesalahan server" }, { status: 500 });
+    console.error("[ADMIN_CREATOR_REVIEW_ERROR]", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
