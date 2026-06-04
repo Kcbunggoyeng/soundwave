@@ -12,17 +12,6 @@ export default async function RegisterPage() {
   return (
     <div>
       <RegisterForm />
-      <div className="fixed bottom-6 left-0 right-0 flex justify-center">
-        <Link
-          href="/creator-register"
-          className="flex items-center gap-2 text-zinc-500 hover:text-green-400 text-sm transition-colors"
-        >
-          <span>🎙️</span>
-          <span className="hover:underline underline-offset-4">
-            Daftar sebagai Artist / Creator
-          </span>
-        </Link>
-      </div>
     </div>
   );
 }
